@@ -1,4 +1,4 @@
-# Intro to React Native
+# Intro to Flutter
 
 Adapted from [Orbital Workshop 2023](https://github.com/yadunut/orbital-react-native-2023/blob/main/slides/part1.md)
 
@@ -6,354 +6,226 @@ Additional information can be found in the [NUS Hackers React Native wiki](https
 
 ## About Me
 
--   Justin Cheah Yun Fei
--   Y3 NUS CS + BBA
--   NUS Hackers coreteam member
--   Used React Native for my Orbital 2023 project - [SoulScribe](https://tinyurl.com/soulscribeai)
--   Created Minimum Viable Products (MVPs) for a few startups using React Native
+-   Kwa Jian Quan
+-   CEG Y3 (Poly)
+-   Used Flutter in Internship
+-   NUS Venture Initiation Programme (VIP) Flutter Companion App
+
 <p align="center">
-  <img src="./images/5856.png" width="300" alt="Picture">
+<!-- /put mia health and solartag (maybe demo?) -->
 </p>
 
 ## Overview
 
 ### Part 1
 
--   A bit about React Native
--   Setting up React Native + simulator
--   Intro to JSX
--   Intro to React Native Components
--   Styling UI with React Native
--   State management with React Native
--   Let's build an app!
+- Introduction to Flutter and Dart
+- Setting up Flutter + emulator
+- Intro to widgets
+- Layout and styling
+- State management with Flutter
+- Let's build an app!
 
 ### Part 2
-
--   Dealing with external APIs
--   When and how to use libraries
--   Developing in a clean and modular way
--   Using external services (eg. DB)
+- Working with external APIs
+- When and how to use packages
+- Modular app architecture
+- Persisting data and backend integration
 
 ## Setting expectations
 
--   This workshop will focus on concepts rather than processes
--   This course will assume that you are a beginner, though I will make reference to other concepts like `React` or `CSS` without delving too deep into them
--   There will (unfortunately) be some unfamiliar jargons and processes, especially when setting up. Don't think too much about them. They are easily google-able and even I have to google them every time despite having set up multiple projects.
--   Goal of this workshop:
-    > I know about this concept and what it does. I might not know how to do it yet, but I know roughly which direction to go to learn more about it.
+- This workshop focuses on core concepts rather than full build pipelines.
+- Assumes beginner-level familiarity with programming
+- Goal: know what Flutter does and how to proceed to build apps.
 
 ## Format
 
--   I will be going through some concepts with some real life demo
+- Short concept explanations followed by code examples and a demo.
+- Checkpoint codes will be provided if you need!
 
 ## What we will be building
 
 ![nextbus](./images/nextbus.jpg)
 
-## Why React Native?
+## Why Flutter?
 
--   It is cross platform (Android and iOS phones can use my app)
--   It is very similar to React (React is arguably the most popular framework for web development right now, skills can be easily transferrable between them)
+- Single codebase for Android & iOS.
+- Fast development with hot reload.
+- Rich widget set and good tooling (VS Code / Android Studio).
 
-## Setting up React Native (Expo)
+## Setting up Flutter
 
-> Expo is a set of tools and services built around React Native and, while it has many features, the most relevant feature for us right now is that it can get you writing a React Native app within minutes. You will only need a recent version of Node.js and a phone or emulator.
+Follow the official docs for full setup: https://flutter.dev/docs/get-started/install
 
-In other words, Expo abstracts away a lot of the nitty gritty details of dealing with React Native. You can focus on building the app instead of spending time on configurations.
+Quick steps (Windows):
 
-### Setting up Expo Go
+```bash
+# 1. Install Flutter SDK (follow the Windows guide on flutter.dev)
+# 2. Add Flutter to PATH and restart terminal
+flutter doctor
+```
 
-Follow the instructions [here](https://reactnative.dev/docs/environment-setup).
+Run `flutter doctor` and follow its suggestions (Android SDK, platform-tools, etc.).
 
-### Setting up Android emulator
+### Android emulator
 
-Follow the instructions [here](https://docs.expo.dev/workflow/android-studio-emulator/).
+- Install Android Studio and create an AVD (Android Virtual Device).
+- Alternatively use a physical device with USB debugging enabled.
+
+### iOS
+
+- iOS development requires macOS; skip if on Windows.
+
+### Editor
+
+- Use VS Code or Android Studio. Install the Flutter and Dart plugins.
 
 ## Getting started
 
-1. Open the project in the IDE of your choice
-2. Open a new terminal window
-3. Run `npm run android` or `npm run ios` (note that only Mac users can use this command)
-4. Try editing some text and see the changes in real time!
+1. Create a new app:
 
-## Intro to JSX
+```bash
+flutter create nextbus_app
+cd nextbus_app
+```
 
-### Rules
+2. Run the app on an emulator or device:
 
--   Any javascript in JSX must be enclosed by `{}`
--   Components names MUST start with Capital Letter
+```bash
+flutter run
+```
 
-```JSX
-function App() {
-    const name = "app";
-    return (
-        <View>
-            <Text>{name}</Text>
-        </View>
+3. Use hot reload to see changes immediately (`r` in the terminal or the hot-reload button in your editor).
+
+## Intro to Dart & Widgets
+
+- Flutter apps are written in Dart. UI is built with widgets.
+- Everything is a widget: layout, text, buttons, images.
+
+### Basic rules
+
+- Use `StatelessWidget` for immutable UI and `StatefulWidget` for UI that changes over time.
+- Use the `build()` method to return a widget tree.
+
+### Example: Counter app (equivalent of the React Native state example)
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Counter Demo',
+      home: CounterPage(),
     );
+  }
+}
+
+class CounterPage extends StatefulWidget {
+  @override
+  _CounterPageState createState() => _CounterPageState();
+}
+
+class _CounterPageState extends State<CounterPage> {
+  int _counter = 0;
+
+  void _increment() {
+    setState(() => _counter++);
+  }
+
+  void _decrement() {
+    setState(() => _counter--);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Counter')),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Counter value', style: TextStyle(fontSize: 20)),
+            SizedBox(height: 8),
+            Text('$_counter', style: TextStyle(fontSize: 48)),
+            SizedBox(height: 16),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(onPressed: _decrement, child: Text('-')),
+                SizedBox(width: 12),
+                ElevatedButton(onPressed: _increment, child: Text('+')),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 ```
 
-### These two are equivalent
+## Common Flutter widgets
 
-#### Using const syntax for javascript
+- `Scaffold`: Basic page layout (appBar, body, floatingActionButton).
+- `Container`: A box with padding, margin, decoration.
+- `Row`, `Column`: Horizontal and vertical layout.
+- `Expanded`: Fill available space.
+- `ListView`: Scrollable list.
+- `Text`, `Image`, `ElevatedButton`, `TextField`.
 
-```javascript
-const logHelloWorld = () => {
-    console.log("Hello World");
-};
-```
+## Layout & Styling
 
-#### Using function syntax for javascript
+- Use `padding`/`margin` via `EdgeInsets`.
+- Align with `MainAxisAlignment` and `CrossAxisAlignment`.
+- Style with `BoxDecoration` and `TextStyle`.
 
-```javascript
-function logHelloWorld() {
-    console.log("Hello World");
+## Passing data between widgets (Props)
+
+- Widgets receive values via constructor parameters (immutable `final` fields).
+- Example:
+
+```dart
+class Greeting extends StatelessWidget {
+  final String name;
+  Greeting({required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Hello, $name');
+  }
 }
 ```
 
-### These two are equivalent
+## State management
 
-#### Using const syntax for JSX
+- Simple apps: use `setState` in `StatefulWidget`.
+- Medium/large apps: consider `Provider`, `Riverpod`, `Bloc`, or other packages.
 
-```JSX
-const App = () => {
-    return (
-        <View>
-            <Text>This is an app</Text>
-        </View>
-    );
-}
-```
+## Working with packages
 
-#### Using function syntax for JSX
+- Add dependencies in `pubspec.yaml` and run `flutter pub get`.
+- Common packages: `http` (network), `provider` (state), `shared_preferences` (local storage).
 
-```JSX
-function App() {
-    return (
-        <View>
-            <Text>This is an app</Text>
-        </View>
-    );
-}
-```
+## Dealing with external APIs
 
-### These two are equivalent
+- Use the `http` package or `dio` for network calls.
+- Perform network I/O asynchronously with `async`/`await` and `FutureBuilder` to render results.
 
-#### Closing tag for components that do not encapsulate anything
+## Organizing code
 
-```JSX
-function App() {
-    return (
-        <Button title="Press Me"></Button>
-    );
-}
-```
-
-#### Self-closing tag for components that do not encapsulate anything
-
-```JSX
-function App() {
-    return (
-        <Button title="Press Me" />
-    );
-}
-```
-
-### These three are equivalent
-
-#### Nesting components together
-
-```JSX
-const MainComponent = () => {
-    return (
-        <View>
-            <View>
-                <Text>Subcomponent one</Text>
-            </View>
-            <View>
-                <Text>Subcomponent two</Text>
-            </View>
-        </View>
-    );
-}
-```
-
-#### Extracting the components into their own components within the same page
-
-```JSX
-const MainComponent = () => {
-    return (
-        <View>
-            <SubComponentOne />
-            <SubComponentTwo />
-        </View>
-    );
-}
-
-const SubComponentOne = () => {
-    return (
-        <View>
-            <Text>Subcomponent one</Text>
-        </View>
-    );
-}
-
-const SubComponentTwo = () => {
-    return (
-        <View>
-            <Text>Subcomponent two</Text>
-        </View>
-    );
-}
-```
-
-#### Extracting the components into their own components into other files, export them and importing them for use
-
-```JSX
-// index.jsx
-import SubComponentOne from "./component-one.jsx"
-import SubComponentTwo from "./component-two.jsx"
-
-const MainComponent = () => {
-    return (
-        <View>
-            <SubComponentOne />
-            <SubComponentTwo />
-        </View>
-    );
-}
-
-// component-one.jsx
-const SubComponentOne = () => {
-    return (
-        <View>
-            <Text>Subcomponent one</Text>
-        </View>
-    );
-}
-export default SubComponentOne;
-
-// component-two.jsx
-const SubComponentTwo = () => {
-    return (
-        <View>
-            <Text>Subcomponent two</Text>
-        </View>
-    );
-}
-export default SubComponentTwo;
-```
-
-## Creating UI with React Native
-
-Think of it as a tool that allows you to to create stuff with logic and UI. Since CS1101S (or any of the CS1010 variants) focuses mainly on logic, this might be the first time you are dealing with UI.
-
-Normally, UI on the web is rendered with HTML. Likewise, we can create UI with HTML-like syntax.
-
-### Common React Native Components
-
-These components are enough to solve 90% of your needs.
-
--   `View`: A container like `div`
--   `ScrollView`: Like `View` but Scrollable
--   `Text`: Displays texts
--   `Button`: Supports touches
--   `TouchableOpacity`: Like `Button` but can encapsulate Button
--   `TextInput`: Supports inputting texts
--   `Image`: Display images
-
-You can read up on other components [here](https://reactnative.dev/docs/components-and-apis).
-
-### Organizing Components
-
-Components can be organized using [flex box](https://css-tricks.com/snippets/css/a-guide-to-flexbox/). Understanding the 4 concepts below can meet 90% of your needs. Later on we will try to create the mockup for NUS NextBUS using these concepts alone.
-
-#### Flex direction
-
-![flex direction](./images/flex-direction.png)
-
--   `row`: organize components horizontally
--   `column`: organize components vertically
-
-#### Justify content
-
-![justify content](./images/justify.png)
-
--   `space-between`: Spread out components evenly. First component at the left end, last component at the end.
--   `center`: Components are centered.
-
-## Props
-
-Props is how react components communcate with each other. Every parent component can pass information to its child components by giving them props.
-
-We've already seen props (short for properties) before, like how we pass in `onPress` is passed to the `Button` component, or how the `styles` is passed to the `View` component. Just like how functions can take in arguments, components can take in properties.
-
-### Tips
-
--   To visualise the container, change the background colour
-
-## State Management
-
-Lets build an app with 3 simple things.
-
-1. A `Text` showing the counter value, initial value of counter = 0
-2. A `Button` to increment the counter
-3. Another `Button` to decrement the counter
-
-### Takeaways
-
--   React Native does not know when to re-render the component
-    using `let counter = 0` and updating it breaks the rules for props stated above, it is mutating the value
--   Thus, react provides us this hook useState for us to let react know when state has been updated
-
-```JSX
-function Component() {
-    const [counter, setCounter] = useState(0);
-    ...
-    // DONT DO THIS, mutating counter doesn't tell react to rerender
-    <Button onPress={() => counter += 1}>
-    // No mutation. The counter value is updated in the next render
-    <Button onPress={() => setCounter(counter + 1)}>
-}
-```
-
-### States are used everywhere
-
-#### TextInput
-
-In the text input, every time the user types something, the text changes. We use `useState` to track and update the text every time it changes.
-
-```JSX
-function Component() {
-    const [text, setText] = useState('');
-    // Both methods below are equivalent
-    return (<View><TextInput value={text} onChange={t => setText(t)}/></Text>
-    return (<View><TextInput value={text} onChange={setText}/></Text>
-}
-```
-
-#### Conditional Rendering
-
-```JSX
-function App() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-    }
-
-    return (
-        <View>
-            <Button title="Toggle Modal" onPress={toggleModal} />
-            {isModalOpen && <ModalComponent />}
-        </View>
-    );
-}
-```
+- Break UI into small widgets (files under `lib/`), create `services/` for API clients, `models/` for data types, and `screens/` for pages.
 
 ## Let's build the NUS NextBUS App!
 
-![Nextbus](./images/nextbus.jpg)
+Use the same app concept but implement UI with Flutter widgets and fetch bus data via HTTP.
 
 ## Part 2
+
+- Next: wire up APIs, add routing with `go_router` or `Navigator`, and persist favorites.
+
+---
+
