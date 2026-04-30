@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/bus_stop_field.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,26 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: <Widget>[
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.all(8.0),
-                child: const Icon(Icons.directions_bus, size: 36),
-              ),
-              const Text('Central Library', style: TextStyle(fontSize: 24)),
-              const Spacer(),
-              IconButton( 
-                icon: Icon(
-                  Icons.arrow_right,
-                  color: Colors.black,
-                  size: 26,
-                ),
-                onPressed: () {
-                  print("Button Pressed");
-                },
-              ),
-            ],
-          ),
+          BusStopField(busStopName: 'Central Library', busStopCode: '12345'),
+          BusStopField(busStopName: 'City Hall', busStopCode: '67890')
         ],
       ),
     );
