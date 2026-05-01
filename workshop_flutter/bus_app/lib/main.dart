@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/bus_routes_screen.dart';
-import 'screens/bus_timing_screen.dart';
+import 'views/bus_routes_view.dart';
+import 'views/bus_timing_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        centerTitle: true,
         title: Text(widget.title),
       ),
       body: SafeArea(child: _widgetOptions.elementAt(_selectedIndex)),

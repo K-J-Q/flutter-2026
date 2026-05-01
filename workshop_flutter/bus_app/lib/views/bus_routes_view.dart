@@ -55,6 +55,41 @@ class _ListOfBusToBusStops extends StatelessWidget {
   const _ListOfBusToBusStops({required this.busStopDetails});
 
   final Map<String, List<BusStop>> busStopDetails;
+
+  String _getProperName(String rawName) {
+    switch (rawName) {
+      case 'blueBus':
+        return 'Blue Bus';
+      case 'redBus':
+        return 'Red Bus';
+      case 'yellowBus':
+        return 'Yellow Bus';
+      case 'greenBus':
+        return 'Green Bus';
+      case 'brownBus':
+        return 'Brown Bus';
+      default:
+        return 'Unknown Bus';
+    }
+  }
+
+  Color _getBusColor(String rawName) {
+    switch (rawName) {
+      case 'blueBus':
+        return Colors.blue;
+      case 'redBus':
+        return Colors.red;
+      case 'yellowBus':
+        return Colors.amber;
+      case 'greenBus':
+        return Colors.green;
+      case 'brownBus':
+        return Colors.brown;
+      default:
+        return Colors.black;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,8 +97,9 @@ class _ListOfBusToBusStops extends StatelessWidget {
       child: Column(
         children: busStopDetails.entries.map((entry) {
           return BusStopField(
-            busName: entry.key,
+            busName: _getProperName(entry.key),
             busStopNames: entry.value.map((stop) => stop.name).toList(),
+            busColor: _getBusColor(entry.key),
           );
         }).toList(),
       ),

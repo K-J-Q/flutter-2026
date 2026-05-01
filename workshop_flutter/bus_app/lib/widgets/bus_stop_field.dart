@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class BusStopField extends StatefulWidget {
-  const BusStopField({super.key, required this.busName, required this.busStopNames});
+  const BusStopField({
+    super.key,
+    required this.busName,
+    required this.busStopNames,
+    this.busColor = Colors.black,
+  });
 
   final String busName;
   final List<String> busStopNames;
+  final Color busColor;
 
   @override
   State<BusStopField> createState() => _BusStopFieldState();
@@ -20,11 +26,19 @@ class _BusStopFieldState extends State<BusStopField> {
           children: [
             Container(
               margin: const EdgeInsets.all(8.0),
-              child: const Icon(Icons.directions_bus, size: 36),
+              child: Icon(
+                Icons.directions_bus,
+                size: 36,
+                color: widget.busColor,
+              ),
             ),
             Text(
               widget.busName,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: widget.busColor,
+              ),
             ),
             const Spacer(),
             IconButton(
