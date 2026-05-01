@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'widgets/bus_stop_field.dart';
+import 'screens/bus_routes_screen.dart';
+import 'screens/bus_timing_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +30,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isExpanded = false;
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    BusTimingView(),
+    BusRoutesView(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +50,18 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
-        children: <Widget>[
-          BusStopField(busStopName: 'Central Library', busStopCode: '12345'),
-          BusStopField(busStopName: 'City Hall', busStopCode: '67890')
+      body: SafeArea(child: _widgetOptions.elementAt(_selectedIndex)),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Timing'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_bus),
+            label: 'Routes',
+          ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        onTap: _onItemTapped,
       ),
     );
   }

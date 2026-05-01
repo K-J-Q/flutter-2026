@@ -1,42 +1,53 @@
 import 'package:flutter/material.dart';
-import '../screens/bus_stop_detail_page.dart';
 
-class BusStopField extends StatelessWidget {
-  const BusStopField({
-    super.key,
-    required this.busStopName,
-    required this.busStopCode,
-  });
+class BusStopField extends StatefulWidget {
+  const BusStopField({super.key, required this.busName, required this.busStopNames});
 
-  final String busStopName;
-  final String busStopCode;
+  final String busName;
+  final List<String> busStopNames;
 
   @override
+  State<BusStopField> createState() => _BusStopFieldState();
+}
+
+class _BusStopFieldState extends State<BusStopField> {
+  bool isExpanded = false;
+  @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Container(
-          margin: const EdgeInsets.all(8.0),
-          child: const Icon(Icons.directions_bus, size: 36),
-        ),
-        Text(
-          busStopName,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        const Spacer(),
-        IconButton(
-          icon: const Icon(Icons.arrow_right, color: Colors.black, size: 26),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => BusStopDetailPage(
-                  busStopName: busStopName,
-                  busStopCode: busStopCode,
-                ),
+        Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(8.0),
+              child: const Icon(Icons.directions_bus, size: 36),
+            ),
+            Text(
+              widget.busName,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            IconButton(
+              icon: Icon(
+                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                color: Colors.black,
               ),
-            );
-          },
+              onPressed: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+            ),
+          ],
         ),
+        if (isExpanded)
+          ...widget.busStopNames.map(
+            (name) => Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+              child: Text(name),
+            ),
+          ),
       ],
     );
   }
